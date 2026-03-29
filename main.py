@@ -121,7 +121,7 @@ def run_pipeline():
         log.info(f"Captioned video: {captioned_path}")
 
         # Stage 6: Mix in background music
-        log.info("[6/7] Mixing background music...")
+        log.info("[6/7] HAHA Mixing background music...")
         mixer = MusicMixer()
         final_video_path = mixer.mix(
             video_path=captioned_path,
