@@ -37,7 +37,11 @@ class VideoAssembler:
             num_needed = max(2, int(audio_duration / 30) + 1)
             clips = [random.choice(library_clips) for _ in range(num_needed)]
             log.info(f"Using {num_needed} random clips from library ({len(library_clips)} available)")
-            bg_path = self._concat_clips(clips, audio_duration, output_path.parent / "background.mp4")
+            try:
+                bg_path = self._concat_clips(clips, audio_duration, output_path.parent / "background.mp4")
+            except Exception as e:
+                log.warning(f"Clip concat failed: {e} — generating background instead")
+                bg_path = self._generate_background(audio_duration, output_path.parent / "background.mp4")
         else:
             log.info("No library clips — generating background")
             bg_path = self._generate_background(audio_duration, output_path.parent / "background.mp4")
@@ -271,8 +275,13 @@ class VideoAssembler:
         return len(audio) / 1000.0
 
     def _run(self, cmd: list):
-        log.debug(f"FFmpeg: {' '.join(str(c) for c in cmd)}")
+        log.info(f"FFmpeg cmd: {' '.join(str(c) for c in cmd[:6])}...")
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode != 0:
-            log.error(f"FFmpeg error:\n{result.stderr[-500:]}")
-            raise RuntimeError(f"FFmpeg failed: {result.stderr[-300:]}")
+            # Get the actual error — filter out the frame progress lines
+            error_lines = [l for l in result.stderr.split("\n")
+                          if l.strip() and "frame=" not in l and "fps=" not in l
+                          and "size=" not in l and "time=" not in l]
+            clean_error = "\n".join(error_lines[-20:])
+            log.error(f"FFmpeg failed:\n{clean_error}")
+            raise RuntimeError(f"FFmpeg failed: {clean_error[-400:]}")
