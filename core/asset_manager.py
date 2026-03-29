@@ -47,10 +47,12 @@ class AssetManager:
             log.info("R2_PUBLIC_URL not set — using local footage only")
             return list(FOOTAGE_DIR.glob("*.mp4"))
 
+        log.info(f"R2 base URL: {self.base_url}")
         FOOTAGE_DIR.mkdir(parents=True, exist_ok=True)
 
         # Fetch the manifest of available clips
         clips = self._get_manifest("footage")
+        log.info(f"R2 footage manifest: {len(clips)} files found — {clips[:3]}")
         if not clips:
             log.warning("No footage manifest found in R2 — using local clips")
             return list(FOOTAGE_DIR.glob("*.mp4"))
