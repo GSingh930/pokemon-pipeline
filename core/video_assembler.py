@@ -102,6 +102,7 @@ class VideoAssembler:
         return output_path
 
     def _concat_clips(self, clips: list, target_duration: float, output_path: Path) -> Path:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         list_file = output_path.parent / "clips_list.txt"
         with open(list_file, "w") as f:
             for clip in clips:
@@ -125,6 +126,7 @@ class VideoAssembler:
 
     def _generate_background(self, duration: float, output_path: Path) -> Path:
         """Generate an animated gradient background — no external files needed."""
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         cmd = [
             self.ffmpeg, "-y",
             "-f", "lavfi",
@@ -278,10 +280,6 @@ class VideoAssembler:
         log.info(f"FFmpeg cmd: {' '.join(str(c) for c in cmd[:6])}...")
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode != 0:
-            # Get the actual error — filter out the frame progress lines
-            error_lines = [l for l in result.stderr.split("\n")
-                          if l.strip() and "frame=" not in l and "fps=" not in l
-                          and "size=" not in l and "time=" not in l]
-            clean_error = "\n".join(error_lines[-20:])
-            log.error(f"FFmpeg failed:\n{clean_error}")
-            raise RuntimeError(f"FFmpeg failed: {clean_error[-400:]}")
+            log.error(f"FFmpeg exit code {result.returncode}")
+            log.error(f"FFmpeg stderr:\n{result.stderr[-800:]}")
+            raise RuntimeError(f"FFmpeg failed (exit {result.returncode}): {result.stderr[-200:]}")

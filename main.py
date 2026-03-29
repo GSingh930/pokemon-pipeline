@@ -52,6 +52,18 @@ def run_pipeline():
         except Exception as e:
             log.warning(f"Asset sync failed (non-fatal): {e}")
 
+    # Clean up old output runs to free disk space (keep last 2)
+    output_root = Path("output")
+    if output_root.exists():
+        old_runs = sorted(output_root.iterdir())
+        for old_run in old_runs[:-2]:
+            import shutil
+            try:
+                shutil.rmtree(old_run)
+                log.info(f"Cleaned up old run: {old_run.name}")
+            except Exception:
+                pass
+
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = Path(f"output/{run_id}")
     output_dir.mkdir(parents=True, exist_ok=True)
