@@ -25,7 +25,6 @@ from core.metadata_writer import MetadataWriter
 from uploaders.youtube import YouTubeUploader
 from uploaders.tiktok import TikTokUploader
 from uploaders.instagram import InstagramUploader
-from analytics.youtube_analytics import YouTubeAnalytics
 from core.asset_manager import AssetManager
 
 logging.basicConfig(
@@ -144,17 +143,6 @@ def run_pipeline():
             yt = YouTubeUploader()
             yt_result = yt.upload(final_video_path, metadata)
             results["youtube"] = yt_result
-            # Register video + pull analytics
-            try:
-                analytics = YouTubeAnalytics()
-                video_id = yt_result.get("video_id", "")
-                if video_id:
-                    analytics.register_video(video_id, metadata, voice_info, topic)
-                log.info("Pulling analytics for all videos...")
-                all_stats = analytics.pull_all()
-                _save_json(output_dir / "analytics_snapshot.json", all_stats)
-            except Exception as e:
-                log.warning(f"Analytics pull failed (non-fatal): {e}")
 
         if os.getenv("TIKTOK_ENABLED", "false").lower() == "true":
             log.info("Uploading to TikTok...")
