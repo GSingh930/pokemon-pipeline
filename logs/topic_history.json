@@ -1,0 +1,86 @@
+[
+  {
+    "title": "Top 10 Most Shocking Anime Moments Ever",
+    "hook": "These anime moments broke the internet.",
+    "angle": "Ranked by cultural impact and shock value",
+    "subjects": [
+      "Naruto",
+      "Dragon Ball Z",
+      "Attack on Titan"
+    ],
+    "virality_score": 9,
+    "type": "hidden_secret",
+    "category": "retro_gaming"
+  },
+  {
+    "title": "Marvel Paid DC $1 to Use a Character",
+    "hook": "DC actually OWNS a character that Marvel made famous, and they only charge one dollar a year to use him.",
+    "angle": "The bizarre legal history of Captain Marvel/Shazam creates a mind-blowing corporate rivalry twist most fans never knew existed.",
+    "subjects": [
+      "Shazam",
+      "Captain Marvel",
+      "Carol Danvers",
+      "DC Comics",
+      "Marvel Comics",
+      "Billy Batson"
+    ],
+    "search_terms": [
+      "Shazam vs Captain Marvel",
+      "Billy Batson transformation",
+      "Carol Danvers Captain Marvel",
+      "Fawcett Comics lawsuit",
+      "DC Marvel logo comparison"
+    ],
+    "virality_score": 8,
+    "type": "did_you_know",
+    "category": "marvel_dc"
+  },
+  {
+    "title": "Top 10 Pokemon Deaths That Traumatized Every Kid",
+    "hook": "Pokemon literally made an entire generation cry and nobody talks about it.",
+    "angle": "Combines childhood nostalgia with surprising dark moments most casual fans forgot or never knew existed across games, anime, and manga.",
+    "subjects": [
+      "Lavender Town",
+      "Marowak Ghost",
+      "Stoutland",
+      "Latios",
+      "Lucario",
+      "Celebi",
+      "Ash Ketchum",
+      "Pokemon Adventures manga",
+      "Butterfree"
+    ],
+    "search_terms": [
+      "Marowak ghost Pokemon Tower",
+      "Stoutland death Sun Moon anime",
+      "Ash turns to stone Mewtwo",
+      "Pokemon Adventures deaths manga",
+      "Butterfree goodbye scene"
+    ],
+    "virality_score": 9,
+    "type": "top10",
+    "category": "pokemon"
+  },
+  {
+    "title": "This Pokemon Was Erased From Existence By Nintendo",
+    "hook": "There is a Pokemon so disturbing that Nintendo literally deleted it from history.",
+    "angle": "Kadabra was banned from the TCG for over 20 years because a real psychic sued Nintendo claiming they stole his identity and powers.",
+    "subjects": [
+      "Kadabra",
+      "Uri Geller",
+      "Pokemon TCG",
+      "Nintendo lawsuits",
+      "banned Pokemon"
+    ],
+    "search_terms": [
+      "Kadabra Pokemon card",
+      "Uri Geller spoon bending",
+      "banned Pokemon cards",
+      "Alakazam evolution line",
+      "Pokemon controversy"
+    ],
+    "virality_score": 9,
+    "type": "lore_deep_dive",
+    "category": "pokemon"
+  }
+]

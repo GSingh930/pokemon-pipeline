@@ -1,0 +1,34 @@
+[
+  {
+    "timestamp": "2026-03-27T23:31:41.018829",
+    "voice_id": "en-GB-ThomasNeural",
+    "voice_name": "Thomas (UK)",
+    "rate": "+5%",
+    "pitch": "-2Hz",
+    "random_pick": true,
+    "content_type": "did_you_know",
+    "category": "marvel_dc",
+    "title": "Marvel Paid DC $1 to Use a Character",
+    "audio_file": "output\\20260327_233122\\voiceover.mp3",
+    "views": null,
+    "likes": null,
+    "comments": null,
+    "watch_time": null
+  },
+  {
+    "timestamp": "2026-03-27T23:38:05.377979",
+    "voice_id": "en-US-AriaNeural",
+    "voice_name": "Aria",
+    "rate": "+8%",
+    "pitch": "+0Hz",
+    "random_pick": true,
+    "content_type": "lore_deep_dive",
+    "category": "pokemon",
+    "title": "This Pokemon Was Erased From Existence By Nintendo",
+    "audio_file": "output\\20260327_233745\\voiceover.mp3",
+    "views": null,
+    "likes": null,
+    "comments": null,
+    "watch_time": null
+  }
+]

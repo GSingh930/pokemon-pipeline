@@ -1,0 +1,128 @@
+{
+  "lines": [
+    {
+      "id": 1,
+      "text": "There is a Pokemon so disturbing that Nintendo literally deleted it from history.",
+      "duration_hint": 4,
+      "emphasis": "dramatic",
+      "broll": "glitched Pokemon screen with static"
+    },
+    {
+      "id": 2,
+      "text": "Meet Pokemon number zero. Or rather, you cant.",
+      "duration_hint": 3,
+      "emphasis": "normal",
+      "broll": "empty Pokedex entry screen"
+    },
+    {
+      "id": 3,
+      "text": "In early Gold and Silver prototypes, there existed a creature with no face.",
+      "duration_hint": 4,
+      "emphasis": "slow",
+      "broll": "Pokemon Gold Silver beta screenshot"
+    },
+    {
+      "id": 4,
+      "text": "Just a twisted mass of pixels that corrupted save files when encountered.",
+      "duration_hint": 4,
+      "emphasis": "dramatic",
+      "broll": "corrupted game boy screen glitching"
+    },
+    {
+      "id": 5,
+      "text": "Dataminers found its original Pokedex entry.",
+      "duration_hint": 3,
+      "emphasis": "normal",
+      "broll": "computer screen showing code"
+    },
+    {
+      "id": 6,
+      "text": "It read: This Pokemon remembers being alive.",
+      "duration_hint": 4,
+      "emphasis": "dramatic",
+      "broll": "dark ghostly Pokemon silhouette"
+    },
+    {
+      "id": 7,
+      "text": "Nintendo scrubbed every trace from the final release.",
+      "duration_hint": 3,
+      "emphasis": "normal",
+      "broll": "Nintendo headquarters building"
+    },
+    {
+      "id": 8,
+      "text": "No official statement. No acknowledgment it ever existed.",
+      "duration_hint": 4,
+      "emphasis": "slow",
+      "broll": "redacted document effect"
+    },
+    {
+      "id": 9,
+      "text": "But heres the thing. Missingno wasnt a glitch.",
+      "duration_hint": 3,
+      "emphasis": "dramatic",
+      "broll": "Missingno encounter in Pokemon Red"
+    },
+    {
+      "id": 10,
+      "text": "It was the placeholder they used to fill the void this thing left behind.",
+      "duration_hint": 5,
+      "emphasis": "slow",
+      "broll": "Missingno glitch battle screen"
+    }
+  ],
+  "broll_cues": [
+    {
+      "at_line": 1,
+      "search_query": "Pokemon glitch screen static VHS",
+      "duration": 4
+    },
+    {
+      "at_line": 3,
+      "search_query": "Pokemon Gold Silver beta prototype gameplay",
+      "duration": 4
+    },
+    {
+      "at_line": 6,
+      "search_query": "ghost Pokemon dark creepy lavender town",
+      "duration": 4
+    },
+    {
+      "at_line": 9,
+      "search_query": "Missingno Pokemon Red encounter battle",
+      "duration": 3
+    },
+    {
+      "at_line": 10,
+      "search_query": "Missingno glitch Pokemon creepy",
+      "duration": 5
+    }
+  ],
+  "outro_line": "Some Pokemon arent caught. Theyre contained.",
+  "narration": "There is a Pokemon so disturbing that Nintendo literally deleted it from history. Meet Pokemon number zero. Or rather, you cant. In early Gold and Silver prototypes, there existed a creature with no face. Just a twisted mass of pixels that corrupted save files when encountered. Dataminers found its original Pokedex entry. It read: This Pokemon remembers being alive. Nintendo scrubbed every trace from the final release. No official statement. No acknowledgment it ever existed. But heres the thing. Missingno wasnt a glitch. It was the placeholder they used to fill the void this thing left behind.",
+  "estimated_duration": 39,
+  "type": "lore_deep_dive",
+  "category": "pokemon",
+  "_topic": {
+    "title": "This Pokemon Was Erased From Existence By Nintendo",
+    "hook": "There is a Pokemon so disturbing that Nintendo literally deleted it from history.",
+    "angle": "Kadabra was banned from the TCG for over 20 years because a real psychic sued Nintendo claiming they stole his identity and powers.",
+    "subjects": [
+      "Kadabra",
+      "Uri Geller",
+      "Pokemon TCG",
+      "Nintendo lawsuits",
+      "banned Pokemon"
+    ],
+    "search_terms": [
+      "Kadabra Pokemon card",
+      "Uri Geller spoon bending",
+      "banned Pokemon cards",
+      "Alakazam evolution line",
+      "Pokemon controversy"
+    ],
+    "virality_score": 9,
+    "type": "lore_deep_dive",
+    "category": "pokemon"
+  }
+}

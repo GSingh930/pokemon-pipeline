@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shorts Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; padding: 24px; }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; color: #fff; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .metric { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 16px; }
+  .metric-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .metric-val { font-size: 28px; font-weight: 700; color: #fff; }
+  .metric-sub { font-size: 12px; color: #555; margin-top: 4px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; }
+  .card h2 { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+  canvas { max-height: 200px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 8px 12px; color: #555; font-weight: 500; border-bottom: 1px solid #2a2a2a; font-size: 11px; text-transform: uppercase; }
+  td { padding: 10px 12px; border-bottom: 1px solid #1f1f1f; color: #ccc; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #222; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-blue   { background: #1a3a5c; color: #60a5fa; }
+  .badge-purple { background: #2d1a5c; color: #a78bfa; }
+  .badge-green  { background: #1a3a2a; color: #4ade80; }
+  .badge-amber  { background: #3a2a0a; color: #fbbf24; }
+  .badge-red    { background: #3a1a1a; color: #f87171; }
+  .badge-pink   { background: #3a1a2a; color: #f472b6; }
+  a { color: #60a5fa; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .voice-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .voice-name { font-size: 12px; color: #aaa; min-width: 130px; }
+  .bar-track { flex: 1; background: #2a2a2a; border-radius: 4px; height: 8px; }
+  .bar-fill { height: 8px; border-radius: 4px; background: #3b82f6; transition: width 0.6s ease; }
+  .empty { color: #555; font-size: 13px; padding: 24px; text-align: center; }
+  .refresh-btn { font-size: 12px; background: #222; border: 1px solid #333; color: #888; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  .refresh-btn:hover { color: #fff; border-color: #555; }
+  .winner { background: #1a2a1a; border-color: #2a4a2a; }
+  .winner .metric-val { color: #4ade80; }
+</style>
+</head>
+<body>
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+  <h1>Shorts Dashboard</h1>
+  <button class="refresh-btn" onclick="loadData()">Refresh</button>
+</div>
+<div class="subtitle" id="last-updated">Loading...</div>
+
+<div class="metrics">
+  <div class="metric">
+    <div class="metric-label">Total Videos</div>
+    <div class="metric-val" id="total-videos">—</div>
+    <div class="metric-sub">uploaded</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Total Views</div>
+    <div class="metric-val" id="total-views">—</div>
+    <div class="metric-sub">across all videos</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Total Likes</div>
+    <div class="metric-val" id="total-likes">—</div>
+    <div class="metric-sub" id="like-rate">—</div>
+  </div>
+  <div class="metric" id="best-card">
+    <div class="metric-label">Best Video</div>
+    <div class="metric-val" id="best-views">—</div>
+    <div class="metric-sub" id="best-title">views</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card">
+    <h2>Views per video (chronological)</h2>
+    <canvas id="views-chart"></canvas>
+  </div>
+  <div class="card">
+    <h2>Views by category</h2>
+    <canvas id="category-chart"></canvas>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card">
+    <h2>Voice A/B — avg views per video</h2>
+    <div id="voice-bars"><div class="empty">No data yet</div></div>
+  </div>
+  <div class="card">
+    <h2>Views by content type</h2>
+    <canvas id="type-chart"></canvas>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:16px">
+  <h2>All videos</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Type</th>
+        <th>Voice</th>
+        <th>Views</th>
+        <th>Likes</th>
+        <th>Comments</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="videos-table"><tr><td colspan="8" class="empty">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<script>
+let viewsChart, categoryChart, typeChart;
+
+const CAT_COLORS = {
+  pokemon:'#3b82f6', anime:'#a78bfa', video_games:'#4ade80',
+  jrpg:'#fbbf24', retro_gaming:'#f87171', game_lore:'#34d399',
+  manga:'#f472b6', marvel_dc:'#fb923c', star_wars:'#e2e8f0', studio_ghibli:'#6ee7b7'
+};
+const CAT_BADGE = {
+  pokemon:'badge-blue', anime:'badge-purple', video_games:'badge-green',
+  jrpg:'badge-amber', retro_gaming:'badge-red', game_lore:'badge-green',
+  manga:'badge-pink', marvel_dc:'badge-amber', star_wars:'badge-blue', studio_ghibli:'badge-green'
+};
+const TYPE_COLORS = ['#3b82f6','#a78bfa','#4ade80','#fbbf24','#f87171'];
+
+function fmt(n) {
+  n = n || 0;
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return (n/1000).toFixed(1) + 'K';
+  return n.toLocaleString();
+}
+
+function makeChart(id, type, labels, datasets, opts = {}) {
+  const canvas = document.getElementById(id);
+  if (canvas._chart) canvas._chart.destroy();
+  const chart = new Chart(canvas, {
+    type,
+    data: { labels, datasets },
+    options: {
+      plugins: { legend: { labels: { color: '#888', font: { size: 11 } } }, ...opts.plugins },
+      scales: type !== 'doughnut' ? {
+        x: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: '#222' } },
+        y: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: '#222' } },
+      } : undefined,
+      ...opts,
+    }
+  });
+  canvas._chart = chart;
+  return chart;
+}
+
+async function loadData() {
+  document.getElementById('last-updated').textContent = 'Loading...';
+  let videos = [];
+
+  for (const path of ['../logs/analytics.json', 'logs/analytics.json', './analytics.json']) {
+    try {
+      const r = await fetch(path);
+      if (r.ok) { videos = await r.json(); break; }
+    } catch(e) {}
+  }
+
+  if (!videos.length) {
+    document.getElementById('last-updated').textContent =
+      'No data yet — run the pipeline at least once to see analytics here.';
+    document.getElementById('videos-table').innerHTML =
+      '<tr><td colspan="8" class="empty">No videos uploaded yet</td></tr>';
+    return;
+  }
+
+  // Sort newest first for table, oldest first for chart
+  const byDate  = [...videos].sort((a,b) => new Date(a.uploaded_at) - new Date(b.uploaded_at));
+  const newest  = [...videos].sort((a,b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
+
+  const totalViews    = videos.reduce((s,v) => s + (v.views||0), 0);
+  const totalLikes    = videos.reduce((s,v) => s + (v.likes||0), 0);
+  const totalComments = videos.reduce((s,v) => s + (v.comments||0), 0);
+  const best          = [...videos].sort((a,b) => (b.views||0)-(a.views||0))[0];
+  const likeRate      = totalViews > 0 ? ((totalLikes/totalViews)*100).toFixed(1) : '0';
+  const lastUpdated   = new Date(videos.reduce((latest, v) =>
+    v.last_updated > latest ? v.last_updated : latest, '')).toLocaleString();
+
+  document.getElementById('total-videos').textContent = videos.length;
+  document.getElementById('total-views').textContent  = fmt(totalViews);
+  document.getElementById('total-likes').textContent  = fmt(totalLikes);
+  document.getElementById('like-rate').textContent    = likeRate + '% like rate';
+  document.getElementById('best-views').textContent   = fmt(best?.views || 0);
+  document.getElementById('best-title').textContent   = (best?.title || '').substring(0,35);
+  document.getElementById('last-updated').textContent = 'Last updated: ' + lastUpdated;
+
+  // Views over time
+  makeChart('views-chart', 'line',
+    byDate.map(v => v.uploaded_at.substring(5,10)),
+    [{ label:'Views', data: byDate.map(v => v.views||0),
+       borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.1)',
+       fill:true, tension:0.4, pointRadius:4, pointBackgroundColor:'#3b82f6' }],
+    { plugins: { legend: { display: false } } }
+  );
+
+  // Category donut
+  const catViews = {};
+  videos.forEach(v => { const c = v.category||'other'; catViews[c] = (catViews[c]||0) + (v.views||0); });
+  makeChart('category-chart', 'doughnut',
+    Object.keys(catViews).map(c => c.replace('_',' ')),
+    [{ data: Object.values(catViews),
+       backgroundColor: Object.keys(catViews).map(c => CAT_COLORS[c]||'#555'),
+       borderWidth: 0 }]
+  );
+
+  // Content type bar
+  const typeViews = {};
+  videos.forEach(v => { const t = v.content_type||'other'; typeViews[t] = (typeViews[t]||0) + (v.views||0); });
+  makeChart('type-chart', 'bar',
+    Object.keys(typeViews).map(t => t.replace(/_/g,' ')),
+    [{ data: Object.values(typeViews), backgroundColor: TYPE_COLORS, borderRadius: 6, borderWidth: 0 }],
+    { plugins: { legend: { display: false } } }
+  );
+
+  // Voice A/B — avg views per video per voice
+  const voiceMap = {};
+  videos.forEach(v => {
+    const n = v.voice_name || 'Unknown';
+    if (!voiceMap[n]) voiceMap[n] = { total: 0, count: 0 };
+    voiceMap[n].total += (v.views || 0);
+    voiceMap[n].count += 1;
+  });
+  const voiceAvg = Object.entries(voiceMap)
+    .map(([name, d]) => ({ name, avg: Math.round(d.total / d.count), count: d.count, total: d.total }))
+    .sort((a,b) => b.avg - a.avg);
+  const maxAvg = Math.max(...voiceAvg.map(v => v.avg), 1);
+  const winner = voiceAvg[0];
+
+  document.getElementById('voice-bars').innerHTML = voiceAvg.length
+    ? voiceAvg.map((v, i) => `
+        <div class="voice-bar">
+          <div class="voice-name">${i === 0 ? '🏆 ' : ''}${v.name}</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${(v.avg/maxAvg*100).toFixed(1)}%;background:${i===0?'#4ade80':'#3b82f6'}"></div>
+          </div>
+          <div style="font-size:12px;color:#888;min-width:70px;text-align:right">${fmt(v.avg)} avg</div>
+          <div style="font-size:11px;color:#555;min-width:45px;text-align:right">${v.count} video${v.count!==1?'s':''}</div>
+        </div>`).join('')
+    : '<div class="empty">No voice data yet</div>';
+
+  // Videos table
+  document.getElementById('videos-table').innerHTML = newest.map(v => {
+    const badge = CAT_BADGE[v.category] || 'badge-blue';
+    const date  = v.uploaded_at ? new Date(v.uploaded_at).toLocaleDateString() : '—';
+    const title = (v.title||'Untitled').substring(0,48);
+    return `<tr>
+      <td><a href="${v.url||'#'}" target="_blank">${title}</a></td>
+      <td><span class="badge ${badge}">${(v.category||'').replace(/_/g,' ')}</span></td>
+      <td style="color:#777;font-size:12px">${(v.content_type||'').replace(/_/g,' ')}</td>
+      <td style="color:#777;font-size:12px">${v.voice_name||'—'}</td>
+      <td style="font-weight:600;color:${(v.views||0)>1000?'#4ade80':'#ccc'}">${fmt(v.views||0)}</td>
+      <td>${fmt(v.likes||0)}</td>
+      <td>${fmt(v.comments||0)}</td>
+      <td style="color:#555;font-size:12px">${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+loadData();
+setInterval(loadData, 60000); // Auto-refresh every minute
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+anthropic>=0.25.0
+edge-tts>=6.1.9
+pydub>=0.25.1
+google-api-python-client>=2.120.0
+google-auth>=2.29.0
+google-auth-oauthlib>=1.2.0
+google-auth-httplib2>=0.2.0
+requests>=2.31.0
+yt-dlp>=2024.1.1

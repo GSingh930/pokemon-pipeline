@@ -1,0 +1,169 @@
+{
+  "lines": [
+    {
+      "id": 1,
+      "text": "Pokemon literally made an entire generation cry and nobody talks about it.",
+      "duration_hint": 4,
+      "emphasis": "dramatic",
+      "broll": "sad Pokemon movie scenes montage"
+    },
+    {
+      "id": 2,
+      "text": "Number 10. Latios sacrificing himself to save Alto Mare from a tsunami.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Latios death scene Pokemon Heroes"
+    },
+    {
+      "id": 3,
+      "text": "Number 9. Luxray dying to protect its trainer in the manga. Pure devastation.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Pokemon manga dramatic panels"
+    },
+    {
+      "id": 4,
+      "text": "Number 8. Lucario turning to crystal after saving the Tree of Beginning.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Lucario crystal death scene movie"
+    },
+    {
+      "id": 5,
+      "text": "Number 7. Stoutland passing away while Litten watched helplessly.",
+      "duration_hint": 4,
+      "emphasis": "slow",
+      "broll": "Stoutland Litten sad scene anime"
+    },
+    {
+      "id": 6,
+      "text": "Number 6. The Marowak ghost who died protecting her Cubone baby.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Lavender Town Marowak ghost scene"
+    },
+    {
+      "id": 7,
+      "text": "Number 5. Celebi literally dying in Ashs arms before time travel saved it.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Celebi death scene Pokemon 4Ever"
+    },
+    {
+      "id": 8,
+      "text": "Number 4. Darkrai taking a fatal hit to protect everyone in Rise of Darkrai.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Darkrai sacrifice scene movie"
+    },
+    {
+      "id": 9,
+      "text": "Number 3. Mew and Mewtwo forcing Pokemon to fight until exhaustion.",
+      "duration_hint": 4,
+      "emphasis": "slow",
+      "broll": "Mewtwo Strikes Back battle scene"
+    },
+    {
+      "id": 10,
+      "text": "Number 2. Jessies Dustox leaving forever. Even villains get heartbreak.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Jessie Dustox goodbye scene"
+    },
+    {
+      "id": 11,
+      "text": "Number 1. Ash turning to stone while Pikachu cried and shocked his lifeless body.",
+      "duration_hint": 5,
+      "emphasis": "dramatic",
+      "broll": "Ash stone death Pikachu crying scene"
+    }
+  ],
+  "broll_cues": [
+    {
+      "at_line": 1,
+      "search_query": "Pokemon sad moments compilation",
+      "duration": 4
+    },
+    {
+      "at_line": 2,
+      "search_query": "Latios death Pokemon Heroes movie",
+      "duration": 4
+    },
+    {
+      "at_line": 3,
+      "search_query": "Pokemon Adventures manga sad scenes",
+      "duration": 4
+    },
+    {
+      "at_line": 4,
+      "search_query": "Lucario movie death scene crystal",
+      "duration": 4
+    },
+    {
+      "at_line": 5,
+      "search_query": "Stoutland death Litten crying anime",
+      "duration": 4
+    },
+    {
+      "at_line": 6,
+      "search_query": "Marowak ghost Lavender Town",
+      "duration": 4
+    },
+    {
+      "at_line": 7,
+      "search_query": "Celebi death Pokemon 4Ever movie",
+      "duration": 4
+    },
+    {
+      "at_line": 8,
+      "search_query": "Darkrai sacrifice Rise of Darkrai",
+      "duration": 4
+    },
+    {
+      "at_line": 9,
+      "search_query": "Mewtwo Strikes Back clone battle",
+      "duration": 4
+    },
+    {
+      "at_line": 10,
+      "search_query": "Jessie releases Dustox goodbye",
+      "duration": 4
+    },
+    {
+      "at_line": 11,
+      "search_query": "Ash turns to stone Pikachu cries",
+      "duration": 5
+    }
+  ],
+  "outro_line": "A kids show taught us more about grief than our parents ever did.",
+  "narration": "Pokemon literally made an entire generation cry and nobody talks about it. Number 10. Latios sacrificing himself to save Alto Mare from a tsunami. Number 9. Luxray dying to protect its trainer in the manga. Pure devastation. Number 8. Lucario turning to crystal after saving the Tree of Beginning. Number 7. Stoutland passing away while Litten watched helplessly. Number 6. The Marowak ghost who died protecting her Cubone baby. Number 5. Celebi literally dying in Ashs arms before time travel saved it. Number 4. Darkrai taking a fatal hit to protect everyone in Rise of Darkrai. Number 3. Mew and Mewtwo forcing Pokemon to fight until exhaustion. Number 2. Jessies Dustox leaving forever. Even villains get heartbreak. Number 1. Ash turning to stone while Pikachu cried and shocked his lifeless body.",
+  "estimated_duration": 52,
+  "type": "top10",
+  "category": "pokemon",
+  "_topic": {
+    "title": "Top 10 Pokemon Deaths That Traumatized Every Kid",
+    "hook": "Pokemon literally made an entire generation cry and nobody talks about it.",
+    "angle": "Combines childhood nostalgia with surprising dark moments most casual fans forgot or never knew existed across games, anime, and manga.",
+    "subjects": [
+      "Lavender Town",
+      "Marowak Ghost",
+      "Stoutland",
+      "Latios",
+      "Lucario",
+      "Celebi",
+      "Ash Ketchum",
+      "Pokemon Adventures manga",
+      "Butterfree"
+    ],
+    "search_terms": [
+      "Marowak ghost Pokemon Tower",
+      "Stoutland death Sun Moon anime",
+      "Ash turns to stone Mewtwo",
+      "Pokemon Adventures deaths manga",
+      "Butterfree goodbye scene"
+    ],
+    "virality_score": 9,
+    "type": "top10",
+    "category": "pokemon"
+  }
+}

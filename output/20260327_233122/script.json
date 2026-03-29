@@ -1,0 +1,117 @@
+{
+  "lines": [
+    {
+      "id": 1,
+      "text": "DC actually OWNS a character that Marvel made famous, and they only charge one dollar a year to use him.",
+      "duration_hint": 5,
+      "emphasis": "dramatic",
+      "broll": "Captain Marvel Shazam comic book covers"
+    },
+    {
+      "id": 2,
+      "text": "His name is Captain Marvel.",
+      "duration_hint": 2,
+      "emphasis": "slow",
+      "broll": "Original Captain Marvel Shazam transformation"
+    },
+    {
+      "id": 3,
+      "text": "Back in the 1940s, Fawcett Comics created a superhero called Captain Marvel.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Vintage 1940s comic book pages"
+    },
+    {
+      "id": 4,
+      "text": "DC sued them into oblivion, claiming he was a Superman ripoff.",
+      "duration_hint": 3,
+      "emphasis": "normal",
+      "broll": "Superman vs Shazam comic comparison"
+    },
+    {
+      "id": 5,
+      "text": "DC bought the character, but here is the twist.",
+      "duration_hint": 3,
+      "emphasis": "dramatic",
+      "broll": "DC Comics logo and headquarters"
+    },
+    {
+      "id": 6,
+      "text": "While DC was busy suing, Marvel swooped in and trademarked the name Captain Marvel.",
+      "duration_hint": 4,
+      "emphasis": "normal",
+      "broll": "Marvel Captain Marvel character Carol Danvers"
+    },
+    {
+      "id": 7,
+      "text": "Now DC has to call their guy Shazam instead.",
+      "duration_hint": 3,
+      "emphasis": "normal",
+      "broll": "Shazam movie poster"
+    },
+    {
+      "id": 8,
+      "text": "Marvel pays DC just one dollar annually to keep using that name.",
+      "duration_hint": 4,
+      "emphasis": "slow",
+      "broll": "One dollar bill close up"
+    },
+    {
+      "id": 9,
+      "text": "DC literally owns the original but cannot even use his real name.",
+      "duration_hint": 4,
+      "emphasis": "dramatic",
+      "broll": "Side by side Shazam and Captain Marvel"
+    }
+  ],
+  "broll_cues": [
+    {
+      "at_line": 1,
+      "search_query": "Shazam Captain Marvel comic book vintage",
+      "duration": 5
+    },
+    {
+      "at_line": 3,
+      "search_query": "1940s golden age comic books",
+      "duration": 4
+    },
+    {
+      "at_line": 6,
+      "search_query": "Captain Marvel Carol Danvers MCU",
+      "duration": 4
+    },
+    {
+      "at_line": 8,
+      "search_query": "dollar bill money payment",
+      "duration": 4
+    }
+  ],
+  "outro_line": "DC literally owns the original but cannot even use his real name.",
+  "narration": "DC actually OWNS a character that Marvel made famous, and they only charge one dollar a year to use him. His name is Captain Marvel. Back in the 1940s, Fawcett Comics created a superhero called Captain Marvel. DC sued them into oblivion, claiming he was a Superman ripoff. DC bought the character, but here is the twist. While DC was busy suing, Marvel swooped in and trademarked the name Captain Marvel. Now DC has to call their guy Shazam instead. Marvel pays DC just one dollar annually to keep using that name. DC literally owns the original but cannot even use his real name.",
+  "estimated_duration": 42,
+  "type": "did_you_know",
+  "category": "marvel_dc",
+  "_topic": {
+    "title": "Marvel Paid DC $1 to Use a Character",
+    "hook": "DC actually OWNS a character that Marvel made famous, and they only charge one dollar a year to use him.",
+    "angle": "The bizarre legal history of Captain Marvel/Shazam creates a mind-blowing corporate rivalry twist most fans never knew existed.",
+    "subjects": [
+      "Shazam",
+      "Captain Marvel",
+      "Carol Danvers",
+      "DC Comics",
+      "Marvel Comics",
+      "Billy Batson"
+    ],
+    "search_terms": [
+      "Shazam vs Captain Marvel",
+      "Billy Batson transformation",
+      "Carol Danvers Captain Marvel",
+      "Fawcett Comics lawsuit",
+      "DC Marvel logo comparison"
+    ],
+    "virality_score": 8,
+    "type": "did_you_know",
+    "category": "marvel_dc"
+  }
+}

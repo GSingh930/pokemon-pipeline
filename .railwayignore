@@ -1,0 +1,16 @@
+footage/
+output/
+logs/
+music/
+__pycache__/
+*.mp4
+*.mp3
+*.wav
+*.mov
+*.avi
+*.mkv
+*.webm
+*.pyc
+.env
+auth/youtube_token.json
+auth/client_secrets.json
