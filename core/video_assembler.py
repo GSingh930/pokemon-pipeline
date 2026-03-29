@@ -94,8 +94,9 @@ class VideoAssembler:
                 "MarginR=40'"
             ),
             "-c:a", "copy",
-            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "28",
             "-pix_fmt", "yuv420p",
+            "-threads", "2",
             str(output_path),
         ]
         self._run(cmd)
@@ -115,9 +116,7 @@ class VideoAssembler:
             "-f", "concat", "-safe", "0",
             "-i", str(list_file),
             "-t", str(target_duration),
-            "-vf", f"scale={self.width}:{self.height}:force_original_aspect_ratio=increase,crop={self.width}:{self.height},setsar=1",
-            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-            "-pix_fmt", "yuv420p",
+            "-c:v", "copy",
             "-an",
             str(output_path),
         ]
@@ -147,8 +146,9 @@ class VideoAssembler:
                 "-f", "lavfi",
                 "-i", f"color=c=0x1a0533:size={self.width}x{self.height}:rate=30",
                 "-t", str(duration),
-                "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "28",
                 "-pix_fmt", "yuv420p",
+                "-threads", "2",
                 str(output_path),
             ]
             self._run(cmd)
@@ -217,8 +217,9 @@ class VideoAssembler:
                 "-filter_complex", filter_str,
                 "-map", "[outv]",
                 "-t", str(total_duration),
-                "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "28",
                 "-pix_fmt", "yuv420p",
+                "-threads", "2",
                 "-an",
                 str(output_path),
             ]
