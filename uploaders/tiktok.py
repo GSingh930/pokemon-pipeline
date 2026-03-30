@@ -1,6 +1,5 @@
 """
-TikTok uploader - uses tiktok-uploader with session ID.
-No API approval needed.
+TikTok uploader - uses tiktok-uploader with session cookies.
 
 Setup:
     1. Go to tiktok.com in Chrome, log in
@@ -11,7 +10,9 @@ Setup:
 """
 
 import os
+import json
 import logging
+import tempfile
 from pathlib import Path
 
 log = logging.getLogger(__name__)
@@ -34,18 +35,33 @@ class TikTokUploader:
             )
 
         video_path = Path(video_path)
-        caption    = metadata.get("tiktok", {}).get("caption", "#Pokemon #PokemonFacts")
-        caption    = caption[:150]
+        caption    = metadata.get("tiktok", {}).get("caption", "#Pokemon #PokemonFacts")[:150]
+
+        # Write cookies as a proper JSON file with domain set
+        cookies = [
+            {
+                "name":   "sessionid",
+                "value":  self.session_id,
+                "domain": ".tiktok.com",
+                "path":   "/",
+                "secure": True,
+                "httpOnly": True,
+            }
+        ]
+        tmp = Path(tempfile.mktemp(suffix=".json"))
+        tmp.write_text(json.dumps(cookies))
 
         log.info(f"Uploading to TikTok: {video_path.name}")
 
-        result = upload_video(
-            filename=str(video_path),
-            description=caption,
-            sessionid=self.session_id,
-            headless=True,
-            browser="chromium",
-        )
-
-        log.info(f"TikTok upload complete: {result}")
-        return {"success": True, "result": str(result)}
+        try:
+            result = upload_video(
+                filename=str(video_path),
+                description=caption,
+                cookies=str(tmp),
+                headless=True,
+                browser="chromium",
+            )
+            log.info(f"TikTok upload complete: {result}")
+            return {"success": True, "result": str(result)}
+        finally:
+            tmp.unlink(missing_ok=True)
