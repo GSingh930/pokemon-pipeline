@@ -51,7 +51,8 @@ class AssetManager:
         FOOTAGE_DIR.mkdir(parents=True, exist_ok=True)
 
         # Fetch the manifest of available clips
-        clips = self._get_manifest("footage")
+        # Try both paths in case user uploaded to footage/ or footage/library/
+        clips = self._get_manifest("footage/library") or self._get_manifest("footage")
         log.info(f"R2 footage manifest: {len(clips)} files found — {clips[:3]}")
         if not clips:
             log.warning("No footage manifest found in R2 — using local clips")
@@ -64,8 +65,12 @@ class AssetManager:
                 downloaded.append(local_path)
                 continue
 
-            url = f"{self.base_url}/footage/{filename}"
+            # Try both URL paths
+            url = f"{self.base_url}/footage/library/{filename}"
             path = self._download(url, local_path)
+            if not path:
+                url = f"{self.base_url}/footage/{filename}"
+                path = self._download(url, local_path)
             if path:
                 self._mark_cached(f"footage/{filename}", path)
                 downloaded.append(path)

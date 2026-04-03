@@ -81,7 +81,11 @@ class TTSEngine:
         log.info(f"TTS voice: {self.voice_name} ({self.voice}) rate={self.rate} pitch={self.pitch}")
         clean_text = self._clean_text(text)
 
-        asyncio.run(self._generate_async(clean_text, output_path))
+        # Run in a thread to avoid event loop conflicts with Playwright
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(asyncio.run, self._generate_async(clean_text, output_path))
+            future.result()
 
         # Log for A/B tracking
         self._log_voice(topic, content_type, output_path)
