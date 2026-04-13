@@ -1,6 +1,7 @@
 """
 TTS engine - randomly picks a Microsoft Edge neural voice per video.
-Logs the voice used so you can A/B test performance across uploads.
+Retries with fallback voices if a voice fails.
+Runs in a thread to avoid asyncio conflicts with Playwright.
 """
 
 import os
@@ -8,6 +9,7 @@ import asyncio
 import logging
 import random
 import json
+import concurrent.futures
 from pathlib import Path
 from datetime import datetime
 
@@ -15,64 +17,46 @@ log = logging.getLogger(__name__)
 
 AB_LOG_FILE = Path("logs/ab_voice_log.json")
 
-# All voices available for A/B testing
-# Format: (voice_id, display_name, style_notes)
 VOICE_POOL = [
-    # Male voices
-    ("en-US-GuyNeural",         "Guy",         "deep, dramatic — great for dark lore"),
-    ("en-US-ChristopherNeural", "Christopher", "clear, confident — great for top 10s"),
-    ("en-US-EricNeural",        "Eric",        "authoritative, serious"),
-    ("en-US-RogerNeural",       "Roger",       "warm, engaging"),
-    ("en-US-SteffanNeural",     "Steffan",     "neutral, professional"),
-    ("en-GB-RyanNeural",        "Ryan (UK)",   "British accent, distinct and cool"),
-    ("en-GB-ThomasNeural",      "Thomas (UK)", "British, calm and measured"),
-    ("en-AU-WilliamNeural",     "William (AU)","Australian accent, energetic"),
-
-    # Female voices
-    ("en-US-JennyNeural",       "Jenny",       "upbeat, friendly"),
-    ("en-US-AriaNeural",        "Aria",        "clear, versatile"),
-    ("en-US-SaraNeural",        "Sara",        "warm, natural"),
-    ("en-US-NancyNeural",       "Nancy",       "calm, articulate"),
-    ("en-GB-SoniaNeural",       "Sonia (UK)",  "British female, polished"),
-    ("en-AU-NatashaNeural",     "Natasha (AU)","Australian female, bright"),
+    ("en-US-GuyNeural",         "Guy",         "+5%",  "-5Hz"),
+    ("en-US-ChristopherNeural", "Christopher", "+8%",  "+0Hz"),
+    ("en-US-EricNeural",        "Eric",        "+5%",  "-3Hz"),
+    ("en-US-RogerNeural",       "Roger",       "+10%", "+0Hz"),
+    ("en-US-SteffanNeural",     "Steffan",     "+8%",  "+0Hz"),
+    ("en-GB-RyanNeural",        "Ryan (UK)",   "+5%",  "-2Hz"),
+    ("en-GB-ThomasNeural",      "Thomas (UK)", "+5%",  "-2Hz"),
+    ("en-AU-WilliamNeural",     "William (AU)","10%",  "+0Hz"),
+    ("en-US-JennyNeural",       "Jenny",       "+10%", "+2Hz"),
+    ("en-US-AriaNeural",        "Aria",        "+8%",  "+0Hz"),
+    ("en-US-NancyNeural",       "Nancy",       "+5%",  "+0Hz"),
+    ("en-GB-SoniaNeural",       "Sonia (UK)",  "+8%",  "+0Hz"),
+    ("en-AU-NatashaNeural",     "Natasha (AU)","10%",  "+2Hz"),
 ]
 
-# Rate and pitch tuning per voice for best results
-VOICE_TUNING = {
-    "en-US-GuyNeural":         {"rate": "+5%",  "pitch": "-5Hz"},
-    "en-US-ChristopherNeural": {"rate": "+8%",  "pitch": "+0Hz"},
-    "en-US-EricNeural":        {"rate": "+5%",  "pitch": "-3Hz"},
-    "en-US-RogerNeural":       {"rate": "+10%", "pitch": "+0Hz"},
-    "en-US-SteffanNeural":     {"rate": "+8%",  "pitch": "+0Hz"},
-    "en-GB-RyanNeural":        {"rate": "+5%",  "pitch": "-2Hz"},
-    "en-GB-ThomasNeural":      {"rate": "+5%",  "pitch": "-2Hz"},
-    "en-AU-WilliamNeural":     {"rate": "+10%", "pitch": "+0Hz"},
-    "en-US-JennyNeural":       {"rate": "+10%", "pitch": "+2Hz"},
-    "en-US-AriaNeural":        {"rate": "+8%",  "pitch": "+0Hz"},
-    "en-US-SaraNeural":        {"rate": "+8%",  "pitch": "+0Hz"},
-    "en-US-NancyNeural":       {"rate": "+5%",  "pitch": "+0Hz"},
-    "en-GB-SoniaNeural":       {"rate": "+8%",  "pitch": "+0Hz"},
-    "en-AU-NatashaNeural":     {"rate": "+10%", "pitch": "+2Hz"},
-}
+# Always-reliable fallbacks
+SAFE_VOICES = [
+    ("en-US-GuyNeural",         "Guy",         "+5%",  "-5Hz"),
+    ("en-US-ChristopherNeural", "Christopher", "+8%",  "+0Hz"),
+    ("en-US-AriaNeural",        "Aria",        "+8%",  "+0Hz"),
+]
 
 
 class TTSEngine:
     def __init__(self):
-        # Allow manual override via env var, otherwise random
         forced = os.getenv("TTS_VOICE")
         if forced:
-            self.voice = forced
+            self.voice      = forced
             self.voice_name = forced
-            self.is_random = False
+            self.rate       = os.getenv("TTS_RATE", "+5%")
+            self.pitch      = os.getenv("TTS_PITCH", "+0Hz")
+            self.is_random  = False
         else:
-            voice_id, name, _ = random.choice(VOICE_POOL)
-            self.voice = voice_id
+            voice_id, name, rate, pitch = random.choice(VOICE_POOL)
+            self.voice      = voice_id
             self.voice_name = name
-            self.is_random = True
-
-        tuning = VOICE_TUNING.get(self.voice, {"rate": "+5%", "pitch": "+0Hz"})
-        self.rate = os.getenv("TTS_RATE", tuning["rate"])
-        self.pitch = os.getenv("TTS_PITCH", tuning["pitch"])
+            self.rate       = rate
+            self.pitch      = pitch
+            self.is_random  = True
 
     def generate(self, text: str, output_path: Path, content_type: str = None, topic: dict = None) -> Path:
         output_path = Path(output_path)
@@ -81,31 +65,42 @@ class TTSEngine:
         log.info(f"TTS voice: {self.voice_name} ({self.voice}) rate={self.rate} pitch={self.pitch}")
         clean_text = self._clean_text(text)
 
-        # Run in a thread to avoid event loop conflicts with Playwright
-        import concurrent.futures
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(asyncio.run, self._generate_async(clean_text, output_path))
-            future.result()
+        # Try selected voice then safe fallbacks
+        voices_to_try = [(self.voice, self.voice_name, self.rate, self.pitch)]
+        for v in SAFE_VOICES:
+            if v[0] != self.voice:
+                voices_to_try.append(v)
 
-        # Log for A/B tracking
+        last_error = None
+        for voice_id, voice_name, rate, pitch in voices_to_try:
+            try:
+                self._run_tts(clean_text, output_path, voice_id, rate, pitch)
+                if voice_id != self.voice:
+                    log.warning(f"Used fallback voice: {voice_name}")
+                    self.voice      = voice_id
+                    self.voice_name = voice_name
+                break
+            except Exception as e:
+                last_error = e
+                log.warning(f"Voice {voice_name} failed: {e} — trying next")
+                continue
+        else:
+            raise RuntimeError(f"All TTS voices failed. Last error: {last_error}")
+
         self._log_voice(topic, content_type, output_path)
-
         log.info(f"Audio saved: {output_path} ({output_path.stat().st_size // 1024}KB)")
         return output_path
 
-    async def _generate_async(self, text: str, output_path: Path):
-        try:
+    def _run_tts(self, text: str, output_path: Path, voice: str, rate: str, pitch: str):
+        """Run edge-tts in a thread to avoid asyncio event loop conflicts."""
+        async def _generate():
             import edge_tts
-        except ImportError:
-            raise ImportError("Run: pip install edge-tts")
+            communicate = edge_tts.Communicate(text=text, voice=voice, rate=rate, pitch=pitch)
+            await communicate.save(str(output_path))
 
-        communicate = edge_tts.Communicate(
-            text=text,
-            voice=self.voice,
-            rate=self.rate,
-            pitch=self.pitch,
-        )
-        await communicate.save(str(output_path))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(asyncio.run, _generate())
+            future.result()
 
     def _clean_text(self, text: str) -> str:
         import re
@@ -117,9 +112,7 @@ class TTSEngine:
         return text.strip()
 
     def _log_voice(self, topic: dict, content_type: str, audio_path: Path):
-        """Log which voice was used for this video for A/B analysis."""
         AB_LOG_FILE.parent.mkdir(exist_ok=True)
-
         entry = {
             "timestamp":    datetime.now().isoformat(),
             "voice_id":     self.voice,
@@ -131,12 +124,9 @@ class TTSEngine:
             "category":     topic.get("category", "") if topic else "",
             "title":        topic.get("title", "") if topic else "",
             "audio_file":   str(audio_path),
-            "views":        None,   # filled in later by analytics
+            "views":        None,
             "likes":        None,
-            "comments":     None,
-            "watch_time":   None,
         }
-
         history = []
         if AB_LOG_FILE.exists():
             try:
@@ -144,18 +134,10 @@ class TTSEngine:
                     history = json.load(f)
             except Exception:
                 history = []
-
         history.append(entry)
-
         with open(AB_LOG_FILE, "w") as f:
             json.dump(history, f, indent=2)
 
-        log.info(f"A/B log updated: {AB_LOG_FILE}")
-
     def get_current_voice(self) -> dict:
-        return {
-            "voice_id":   self.voice,
-            "voice_name": self.voice_name,
-            "rate":       self.rate,
-            "pitch":      self.pitch,
-        }
+        return {"voice_id": self.voice, "voice_name": self.voice_name,
+                "rate": self.rate, "pitch": self.pitch}
